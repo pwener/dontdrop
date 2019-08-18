@@ -16,6 +16,7 @@ class Ball extends React.Component {
     this.state = {
       position: { x: 250, y: 50},
       velocity: { x: 0, y: 0},
+      hitFlowCounter: 0,
     };
   }
 
@@ -29,6 +30,10 @@ class Ball extends React.Component {
     ctx.stroke();
 
     const looperTime = setInterval(this.loop, frameDelay);
+
+    this.setState({
+      looperTime,
+    });
   }
 
   loop = () => {
@@ -46,6 +51,9 @@ class Ball extends React.Component {
     return -0.5 * CONTACT_AREA * DENSITY_FLUID * velocity * velocity * sign;
   }
 
+  /**
+   * Calculate new position using previous values of velocity and position
+   */
   calculatePosition = () => {
     const { velocity, position } = this.state;
 
@@ -55,6 +63,11 @@ class Ball extends React.Component {
     };
   }
 
+  /**
+   * Calculate new vector of velocity
+   * 
+   * @param acceleration current vector of acceleration
+   */
   calculateVelocity = (acceleration) => {
     const { velocity } = this.state;
 
@@ -74,14 +87,19 @@ class Ball extends React.Component {
     const newVelocity = Object.assign({}, velocity);
     const newPosition = Object.assign({}, position);
 
-    if (newPosition.y > 500 - RADIUS) {
+    const { space } = this.props;
+
+    if (newPosition.y > space.height - RADIUS) {
       newVelocity.y *= COEFICIENT_RESTITUTION;
-      newPosition.y = 500 - RADIUS;
+      newPosition.y = space.height - RADIUS;
+
+      // update times that ball hit the flow
+      this.setState(prevState => ({ hitFlowCounter: prevState.hitFlowCounter + 1 }));
     }
 
-    if (newPosition.x > 500 - RADIUS) {
+    if (newPosition.x > space.width - RADIUS) {
       newVelocity.x *= COEFICIENT_RESTITUTION;
-      newPosition.x = 500 - RADIUS;
+      newPosition.x = space.width - RADIUS;
     }
 
     if (newPosition.x < RADIUS) {
@@ -92,11 +110,13 @@ class Ball extends React.Component {
     return [ newVelocity, newPosition ];
   }
 
-  /**
-   * 
-   */
   moveBall = () => {
-    const { velocity } = this.state;
+    const { velocity, hitFlowCounter, looperTime } = this.state;
+
+    // in three, game should be over
+    if (hitFlowCounter === 3) {
+      clearInterval(looperTime);
+    }
 
     let Fx = this.calculateForce(velocity.x);
     let Fy = this.calculateForce(velocity.y);
@@ -130,8 +150,9 @@ class Ball extends React.Component {
   updateCanvas = () => {
     const canvas = this.refs.canvas;
     const ctx = canvas.getContext("2d");
+    const { space } = this.props;
 
-    ctx.clearRect(0,0, 500, 500);
+    ctx.clearRect(0, 0, space.width, space.height);
     
     ctx.save();
     const { position } = this.state;
@@ -146,13 +167,15 @@ class Ball extends React.Component {
   }
 
   render() {
+    const { space } = this.props;
+
     return(
       <div>
         <canvas
           style={{ border: '1px solid black'}}
           ref="canvas"
-          width={500}
-          height={500}
+          width={space.width}
+          height={space.height}
         />
       </div>
     )
