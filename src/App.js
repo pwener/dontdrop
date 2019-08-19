@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Ball from './Ball';
+import Game from './Game';
 
 const DIMENSIONS = {
   width: 500, 
@@ -10,7 +10,7 @@ const DIMENSIONS = {
 function App() {
   return (
     <div className="App">
-      <Ball space={DIMENSIONS} />
+      <Game space={DIMENSIONS} />
     </div>
   );
 }
