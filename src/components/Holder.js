@@ -9,6 +9,7 @@ type Vector = {
 };
 
 class Holder {
+  MOVEMENT_SIZE: number = 10;
   coordinate: Vector;
   moveCallback: any;
   size: { width: number, height: number };
@@ -29,19 +30,19 @@ class Holder {
   move(position: "left" | "right" | "top" | "down") {
     switch(position) {
       case "left": {
-        this.coordinate.x =  this.coordinate.x - 1;
+        this.coordinate.x =  this.coordinate.x - this.MOVEMENT_SIZE;
         break;
       }
       case "right": {
-        this.coordinate.x = this.coordinate.x + 1;
+        this.coordinate.x = this.coordinate.x + this.MOVEMENT_SIZE;
         break;
       }
       case "top": {
-        this.coordinate.y = this.coordinate.y - 1;
+        this.coordinate.y = this.coordinate.y - this.MOVEMENT_SIZE;
         break;
       }
       case "down": {
-        this.coordinate.y = this.coordinate.y + 1;
+        this.coordinate.y = this.coordinate.y + this.MOVEMENT_SIZE;
         break;
       }
       default: throw new Error("Invalid movement");
