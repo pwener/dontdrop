@@ -1,26 +1,52 @@
 /* @flow */
-import Board from './Board';
+import { Board } from './Board';
 import Ball from './Ball';
 import Holder from './Holder';
 
+// control object based in HTML and browsers keyboard
+const controls : {
+  values: Array <number>,
+  [key: number]: string
+} = {
+  values: [37, 38, 39, 40],
+};
+
+controls[37] = "left";
+controls[38] = "top";
+controls[39] = "right";
+controls[40] = "down";
+
+/**
+ * Implementation of board using html canvas
+ */
 class CanvasBoard implements Board {
   /**
    * DOM Context from React component
    */
   ctx: any;
+  moveCallback: (position: string) => void;
 
-  constructor (canvasRef: any) {
+  constructor (canvasRef: any, moveCallback: (position: string) => void) {
     this.ctx = canvasRef.current.getContext("2d");
+    this.moveCallback = moveCallback;
   }
 
+  /**
+   * @override
+   */
   initialize(ball: Ball, holder: Holder) {
     // draw init sprites
-    this.ctx.beginPath();
-    // this.drawBall(ball);
-    this.drawHolder(holder);
-    this.ctx.stroke();
+    // draw ball
+    this.render(() => this.drawBall(ball));
+    // draw holder
+    this.render(() => this.drawHolder(holder));
+    // add listener of keyboard event
+    document.addEventListener('keydown', this.controlListener, false);
   }
 
+  /**
+   * @override
+   */
   loop(ball: Ball, holder: Holder, space: { width: number, height: number }) {
     // clear canvas
     this.ctx.clearRect(0, 0, space.width, space.height);    
@@ -33,6 +59,21 @@ class CanvasBoard implements Board {
     this.render(() => this.drawHolder(holder));
 
     this.ctx.restore();
+  }
+
+  /**
+   * Based in browser and HTML
+   * 
+   * @param evt is a JS event fired when user type in keyboard
+   */
+  controlListener = (evt: any) => {
+    const { keyCode } = evt;
+
+    evt.preventDefault();
+
+    if (controls.values.includes(keyCode)) {
+      this.moveCallback(controls[keyCode]);
+    }
   }
 
   render(callback: any) {

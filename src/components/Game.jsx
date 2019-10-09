@@ -16,7 +16,7 @@ const Game = (props) => {
   let board;
 
   useEffect(() => {
-    board = new CanvasBoard(canvasRef);
+    board = new CanvasBoard(canvasRef, holder.moveCallback);
     board.initialize(ball, holder);
   }, []);
 
