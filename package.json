@@ -9,9 +9,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build": "babel src/ -d lib/",
+    "prepublish": "yarn run build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -29,6 +30,10 @@
     ]
   },
   "devDependencies": {
-    "babel-eslint": "9.0.0"
+    "@babel/cli": "^7.6.3",
+    "@babel/core": "^7.6.3",
+    "@babel/preset-flow": "^7.0.0",
+    "babel-eslint": "9.0.0",
+    "flow-bin": "^0.109.0"
   }
 }

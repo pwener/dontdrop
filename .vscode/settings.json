@@ -1,0 +1,5 @@
+{
+  "flow.useNPMPackagedFlow": true,
+  "typescript.format.insertSpaceAfterKeywordsInControlFlowStatements": false,
+  "javascript.format.insertSpaceAfterKeywordsInControlFlowStatements": false
+}

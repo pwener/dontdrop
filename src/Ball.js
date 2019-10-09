@@ -1,3 +1,8 @@
+/**
+ * Abstract of ball entity
+ * 
+ * @flow
+ */
 const MASS = 0.1; //kg
 const RADIUS = 15; // 1px = 1cm
 const COEFICIENT_RESTITUTION = -0.6;
@@ -5,8 +10,20 @@ const DENSITY_FLUID = 1.22; // kg / m^3
 const CONTACT_AREA = Math.PI * RADIUS * RADIUS / (10000);
 const GRAVITY = 9.81; // m/s^2
 
+type Vector = {
+  x: number,
+  y: number,
+};
+
 class Ball {
-  constructor (frameRate, space) {
+  RADIUS: number;
+  position: Vector;
+  velocity: Vector; // velocity vector
+  hitFlowCounter: number;
+  frameRate: number;
+  space: { width: number, height: number };
+
+  constructor (frameRate: number, space: { width: number, height: number }) {
     this.RADIUS = 15;
     this.position = { x: 250, y: 50};
     this.velocity = { x: 0, y: 0};
@@ -18,9 +35,10 @@ class Ball {
   /**
    * Calculate vector of force using velocity vector
    * 
-   * @param velocity is a vector of velocity
+   * @param velocity is the vector's value of velocity
+   * @return the value of component force
    */
-  calculateForce = (velocity) => {
+  calculateForce = (velocity: number) => {
     const sign = velocity / Math.abs(velocity);
 
     return -0.5 * CONTACT_AREA * DENSITY_FLUID * velocity * velocity * sign;
@@ -41,7 +59,7 @@ class Ball {
    * 
    * @param acceleration current vector of acceleration
    */
-  calculateVelocity = (acceleration) => {
+  calculateVelocity = (acceleration: Vector) => {
     return {
       x: this.velocity.x + acceleration.x * this.frameRate,
       y: this.velocity.y + acceleration.y * this.frameRate,
@@ -54,7 +72,7 @@ class Ball {
    * @param velocity current vector of velocity
    * @param position current vector of position
    */
-  handleColisions = (velocity, position) => {
+  handleColisions = (velocity: Vector, position: Vector) => {
     const newVelocity = Object.assign({}, velocity);
     const newPosition = Object.assign({}, position);
 
