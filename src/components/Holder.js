@@ -2,11 +2,7 @@
  * Class with logic of Game holder
  * @flow
  */
-
-type Vector = {
-  x: number,
-  y: number,
-};
+import { Vector } from './Types';
 
 class Holder {
   MOVEMENT_SIZE: number = 10;
@@ -49,10 +45,18 @@ class Holder {
     }
   }
 
+  /**
+   * Check if target and toCompare belongs to one interval with delta error
+   */
   belongsToInterval(target: number, toCompare: number, delta: number = 10) {
     return toCompare >= Math.round(target) - delta && toCompare <= Math.round(target) + delta;
   }
 
+  /**
+   * Check if something in that position hit the holder
+   * 
+   * @param {*} position Vector of another element
+   */
   checkIfHit(position: Vector) {
     return this.belongsToInterval(position.y, this.coordinate.y) && 
       ( Math.round(position.x) >= this.coordinate.x && 

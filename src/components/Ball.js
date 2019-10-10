@@ -4,18 +4,15 @@
  * @flow
  */
 import Holder from "./Holder";
+import { Vector } from './Types';
 
- const MASS = 0.1; //kg
+const MASS = 0.1; //kg
 const RADIUS = 15; // 1px = 1cm
 const COEFICIENT_RESTITUTION = -1;
 const DENSITY_FLUID = 1.22; // kg / m^3
 const CONTACT_AREA = Math.PI * RADIUS * RADIUS / (10000);
 const GRAVITY = 9.81; // m/s^2
 
-type Vector = {
-  x: number,
-  y: number,
-};
 
 class Ball {
   RADIUS: number;
