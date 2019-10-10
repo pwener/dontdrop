@@ -76,7 +76,7 @@ class CanvasBoard implements Board {
     }
   }
 
-  render(callback: any) {
+  render(callback: () => void) {
     this.ctx.beginPath();
     
     callback();
