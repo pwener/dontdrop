@@ -3,16 +3,15 @@ import Ball from './Ball';
 import CanvasBoard from './CanvasBoard';
 import Holder from './Holder';
 
-const frameRate = 1/20; // Seconds
+const frameRate = 1/50; // Seconds
 const frameDelay = frameRate * 1000; // 40fps
 
 const Game = (props) => {
   const canvasRef = React.useRef(null);
 
   const { space } = props;
-
-  const ball = new Ball(frameRate, space);
-  const holder = new Holder();
+  let holder = new Holder();
+  let ball = new Ball(frameRate, space);
   let board;
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const Game = (props) => {
   }, []);
 
   const loop = () => {
-    ball.move();
+    ball.move(holder);
     board.loop(ball, holder, space);
   }
 
@@ -29,6 +28,11 @@ const Game = (props) => {
     let id = setInterval(loop, frameDelay);
     return () => clearInterval(id);
   });
+
+  const restart = () => {
+    ball = new Ball(frameRate, space);
+    holder = new Holder();
+  }
 
   return (
     <div>
@@ -38,6 +42,8 @@ const Game = (props) => {
         width={space.width}
         height={space.height}
       />
+      <br />
+      <button onClick={restart}>Restart</button>
     </div>
   )
 }

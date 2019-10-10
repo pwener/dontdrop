@@ -3,9 +3,11 @@
  * 
  * @flow
  */
-const MASS = 0.1; //kg
+import Holder from "./Holder";
+
+ const MASS = 0.1; //kg
 const RADIUS = 15; // 1px = 1cm
-const COEFICIENT_RESTITUTION = -0.6;
+const COEFICIENT_RESTITUTION = -1;
 const DENSITY_FLUID = 1.22; // kg / m^3
 const CONTACT_AREA = Math.PI * RADIUS * RADIUS / (10000);
 const GRAVITY = 9.81; // m/s^2
@@ -18,7 +20,7 @@ type Vector = {
 class Ball {
   RADIUS: number;
   position: Vector;
-  velocity: Vector; // velocity vector
+  velocity: Vector;
   hitFlowCounter: number;
   frameRate: number;
   space: { width: number, height: number };
@@ -72,16 +74,22 @@ class Ball {
    * @param velocity current vector of velocity
    * @param position current vector of position
    */
-  handleColisions = (velocity: Vector, position: Vector) => {
+  handleColisions = (velocity: Vector, position: Vector, holder: Holder) => {
     const newVelocity = Object.assign({}, velocity);
     const newPosition = Object.assign({}, position);
 
-    if (newPosition.y > this.space.height - RADIUS) {
+    // hit the floor case
+    if (newPosition.y >= this.space.height - RADIUS) {
       newVelocity.y *= COEFICIENT_RESTITUTION;
       newPosition.y = this.space.height - RADIUS;
 
       // update times that ball hit the flow
       this.hitFlowCounter = this.hitFlowCounter + 1;
+    }
+
+    if (holder.checkIfHit(this.position)) {
+      newVelocity.y *= COEFICIENT_RESTITUTION;
+      newPosition.y = holder.coordinate.y - RADIUS;
     }
 
     if (newPosition.x > this.space.width - RADIUS) {
@@ -97,7 +105,7 @@ class Ball {
     return [ newVelocity, newPosition ];
   }
 
-  move = () => {
+  move = (holder: Holder) => {
     let Fx = this.calculateForce(this.velocity.x);
     let Fy = this.calculateForce(this.velocity.y);
 
@@ -119,7 +127,7 @@ class Ball {
     const [
       velocityAfterColision,
       positionAfterColision
-    ] = this.handleColisions(newVelocity, newPosition);
+    ] = this.handleColisions(newVelocity, newPosition, holder);
 
     this.velocity = velocityAfterColision;
     this.position = positionAfterColision;

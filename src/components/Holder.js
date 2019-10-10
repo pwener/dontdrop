@@ -15,7 +15,7 @@ class Holder {
   size: { width: number, height: number };
 
   constructor() {
-    this.coordinate = { x: 250, y: 50};
+    this.coordinate = { x: 200, y: 250};
     this.size = { width: 100, height: 10 };
 
     // to use outside
@@ -47,6 +47,16 @@ class Holder {
       }
       default: throw new Error("Invalid movement");
     }
+  }
+
+  belongsToInterval(target: number, toCompare: number, delta: number = 10) {
+    return toCompare >= Math.round(target) - delta && toCompare <= Math.round(target) + delta;
+  }
+
+  checkIfHit(position: Vector) {
+    return this.belongsToInterval(position.y, this.coordinate.y) && 
+      ( Math.round(position.x) >= this.coordinate.x && 
+        Math.round(position.x) <= (this.coordinate.x + this.size.width))
   }
 }
 
