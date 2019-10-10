@@ -48,7 +48,7 @@ class Holder {
   /**
    * Check if target and toCompare belongs to one interval with delta error
    */
-  belongsToInterval(target: number, toCompare: number, delta: number = 10) {
+  belongsToInterval(target: number, toCompare: number, delta: number = 10): boolean {
     return toCompare >= Math.round(target) - delta && toCompare <= Math.round(target) + delta;
   }
 
@@ -57,7 +57,7 @@ class Holder {
    * 
    * @param {*} position Vector of another element
    */
-  checkIfHit(position: Vector) {
+  checkIfHit(position: Vector): boolean {
     return this.belongsToInterval(position.y, this.coordinate.y) && 
       ( Math.round(position.x) >= this.coordinate.x && 
         Math.round(position.x) <= (this.coordinate.x + this.size.width))

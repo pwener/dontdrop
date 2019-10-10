@@ -2,6 +2,9 @@
 import { Board } from './Board';
 import Ball from './Ball';
 import Holder from './Holder';
+import Obstacle from './Obstacle';
+import { Space } from './Types';
+
 
 // control object based in HTML and browsers keyboard
 const controls : {
@@ -47,7 +50,7 @@ class CanvasBoard implements Board {
   /**
    * @override
    */
-  loop(ball: Ball, holder: Holder, space: { width: number, height: number }) {
+  loop(ball: Ball, holder: Holder, obstacles: Array<Obstacle>, space: Space ) {
     // clear canvas
     this.ctx.clearRect(0, 0, space.width, space.height);    
     this.ctx.save();
@@ -57,6 +60,9 @@ class CanvasBoard implements Board {
 
     // draw holder
     this.render(() => this.drawHolder(holder));
+
+    // draw obstacle
+    this.render(() => this.drawObstacle(obstacles));
 
     this.ctx.restore();
   }
@@ -91,6 +97,12 @@ class CanvasBoard implements Board {
 
   drawBall(ball: Ball) {
     this.ctx.arc(ball.position.x, ball.position.y, ball.RADIUS, 0, 2 * Math.PI);
+  }
+
+  drawObstacle(obstacles: Array<Obstacle>) {
+    obstacles.map(o => {
+      this.ctx.rect(o.position.x, o.position.y, 10, 10);
+    })
   }
 }
 

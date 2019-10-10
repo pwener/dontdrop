@@ -3,7 +3,7 @@ import './App.css';
 import Game from './components/Game';
 
 const DIMENSIONS = {
-  width: 500, 
+  width: 500,
   height: 500,
 };
 
